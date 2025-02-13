@@ -12,32 +12,49 @@ async function expandAndDeduplicate(sources: string[], baseDir: string): Promise
   const seen = new Set<string>();
   const result: string[] = [];
 
+  console.log('Expanding sources:', sources);
+  console.log('Base directory:', baseDir);
+
   for (const pattern of sources) {
     try {
+      console.log('\nProcessing pattern:', pattern);
+      
       // First try to find the file directly
       const filePath = path.isAbsolute(pattern) ? pattern : path.join(baseDir, pattern);
+      console.log('Trying direct file:', filePath);
       try {
         await fs.access(filePath);
         const normalized = path.normalize(pattern);
         if (!seen.has(normalized)) {
           seen.add(normalized);
           result.push(normalized);
+          console.log('Found direct file:', normalized);
         }
-        continue;
-      } catch (error) { }
+      } catch (error) {
+        console.log('Direct file not found:', filePath);
+        
+        // Try glob pattern
+        console.log('Trying glob pattern:', pattern, 'in directory:', baseDir);
+        try {
+          const matches = await glob(pattern, {
+            cwd: baseDir,
+            absolute: false,
+            nodir: true,
+            dot: true,
+            ignore: ['node_modules/**', 'dist/**']
+          });
 
-      // Try glob pattern
-      const matches = await glob(pattern, {
-        cwd: baseDir,
-        absolute: false,
-        nodir: true
-      });
-
-      for (const file of matches) {
-        const normalized = path.normalize(file);
-        if (!seen.has(normalized)) {
-          seen.add(normalized);
-          result.push(normalized);
+          console.log('Glob matches:', matches);
+          for (const file of matches) {
+            const normalized = path.normalize(file);
+            if (!seen.has(normalized)) {
+              seen.add(normalized);
+              result.push(normalized);
+              console.log('Added glob match:', normalized);
+            }
+          }
+        } catch (globError) {
+          console.log('Glob error:', globError);
         }
       }
     } catch (error) {
@@ -45,6 +62,7 @@ async function expandAndDeduplicate(sources: string[], baseDir: string): Promise
     }
   }
 
+  console.log('\nFinal result:', result);
   return result;
 }
 

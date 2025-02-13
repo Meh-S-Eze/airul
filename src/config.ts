@@ -4,7 +4,13 @@ import { AirulConfig } from './types';
 const MODULE_NAME = 'airul';
 
 const defaultConfig: AirulConfig = {
-  sources: ['TODO-AI.md', 'README.md'],
+  sources: [
+    'TODO-AI.md',
+    'README.md',
+    'docs/ideas/*.yaml',
+    'docs/draft/*.yaml',
+    '.cursor/rules/*.mdc'
+  ],
   output: {
     windsurf: true,
     cursor: true
@@ -28,7 +34,6 @@ export async function loadConfig(configPath?: string): Promise<AirulConfig> {
   return {
     ...defaultConfig,
     ...config,
-    sources: config.sources || defaultConfig.sources, // Prioritize config file's sources
     output: {
       ...defaultConfig.output,
       ...(config.output || {})

@@ -144,10 +144,13 @@ program
       const editorOptions = getEditorOptions(options);
       const generateOptions: AirulConfig = {
         ...config,
-        sources: options.sources || config.sources,
+        ...(options.sources ? { sources: options.sources } : {}),
         output: {
           ...config.output,
-          ...editorOptions,
+          ...Object.fromEntries(
+            Object.entries(editorOptions)
+              .filter(([_, value]) => value !== undefined)
+          ),
           customPath: options.customOutput || config.output.customPath
         }
       };
