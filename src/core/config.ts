@@ -7,8 +7,9 @@ const defaultConfig: AirulConfig = {
   sources: [
     'TODO-AI.md',
     'README.md',
-    'docs/ideas/*.yaml',
+    'docs/ideas/*.{yaml,md}',
     'docs/draft/*.yaml',
+    'docs/proposals/*.yaml',
     '.cursor/rules/*.mdc'
   ],
   output: {
