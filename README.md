@@ -1,14 +1,84 @@
 # Airul
 
+> ⚠️ **REFACTORING IN PROGRESS**: This project is currently undergoing a major refactoring to improve code organization and maintainability. The features listed below were working in the previous version and will be restored after the refactor.
+
 Airul generates context for AI agents from your docs. It gives AI immediate access to up-to-date important info about your project.
 
+## Previously Working Features (To Be Restored)
+
+Core functionality that was working and will be restored after refactoring:
+
+- 🎯 **AI Context Generation**
+  - Converting documentation into AI-readable rules
+  - Support for multiple documentation formats (markdown, YAML)
+  - Automatic rule file generation with proper prefixes
+  
+- 🔧 **Project Management**
+  - Creating new projects with `airul new`
+  - Initializing in existing projects with `airul init`
+  - Automatic git repository setup
+  
+- 📝 **Documentation Processing**
+  - Reading from multiple source files
+  - Support for glob patterns
+  - Smart merging of documentation
+  - Duplicate removal
+  
+- 🎨 **Editor Support**
+  - ✅ Cursor IDE (.cursor/rules/*.mdc) - Fully tested
+  - ⚠️ Experimental support for:
+    - Windsurf (.windsurfrules)
+    - GitHub Copilot (.github/copilot-instructions.md)
+    - Cline VSCode extension (.clinerules)
+
+- ⚙️ **Configuration**
+  - CLI options for quick setup
+  - JSON configuration file
+  - NPM scripts integration
+  - Automatic context updates
+
+## Development Status
+
+### 🚧 Current Refactoring
+
+We are currently:
+- Reorganizing the codebase into a more modular structure
+- Improving code maintainability and testability
+- Preparing for new feature additions
+
+### 📅 Timeline
+- Phase 1 (Current): Code Restructuring
+  - Moving files to appropriate modules
+  - Updating import/export structure
+  - Setting up proper TypeScript configurations
+- Phase 2: Feature Restoration
+  - Restoring all previously working features
+  - Adding tests for core functionality
+  - Updating documentation
+- Phase 3: New Features & Improvements
+  - Enhanced editor support
+  - Better error handling
+  - More configuration options
+
+### 🤝 Contributing
+While we're refactoring, you can help by:
+- Testing the previous version
+- Reporting issues
+- Suggesting improvements
+- Reviewing the new structure
+
 ## How to use
+
+> ⚠️ **Note**: During refactoring, new installations may not work as expected. If you need a working version, please use the last stable release or wait for the refactoring to complete.
 
 ### Starting a new project
 
 ```bash
-# Install as a CLI tool
-npm install -g airul
+# Install the last stable version as a CLI tool
+npm install -g airul@latest
+
+# Or install a specific version
+npm install -g airul@1.0.0  # Replace with last stable version
 
 # Create a new project and open in Cursor
 airul new my-project "Create a React app with authentication" --cursor
