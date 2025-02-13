@@ -21,6 +21,26 @@ airul new my-project "Create a React app with authentication" --cursor
 # 5. Open in Cursor (and other editors if specified)
 ```
 
+### Best Practices for Ideas
+
+For best results when creating ideas:
+
+1. Do research first and include detailed information in your idea files
+2. Add code examples and implementation details when possible
+3. If starting with a simple prompt:
+   - Add relevant links and references
+   - The tool will try to expand minimal ideas into more detailed drafts
+   - These expanded drafts will then be used to generate rules
+4. Structure your ideas with clear sections:
+   - Core Architecture
+   - Critical Components
+   - Workflow Implementation
+   - Frontend Integration (if applicable)
+   - Data Management
+   - Deployment
+   - References
+   - Maintenance
+
 ### Adding to existing project
 
 ```bash
@@ -82,6 +102,7 @@ Both approaches will update context when you:
 
 - 🎯 Generate AI context files:
   - Fully tested with Cursor IDE (.cursor/rules/*.mdc)
+  - Each YAML file in docs/ideas/ and docs/draft/ becomes its own rule file
   - File generation available for other editors:
     - Windsurf (.windsurfrules) - generates file but format untested
     - GitHub Copilot (.github/copilot-instructions.md) - generates file but format untested
@@ -99,31 +120,29 @@ Create `.airul.json`:
   "sources": [
     "TODO-AI.md",
     "README.md",
-    "docs/ideas/*.yaml",
-    "docs/draft/*.yaml",
+    "docs/ideas/*.yaml",     /* each file becomes 100-*.mdc */
+    "docs/draft/*.yaml",     /* each file becomes 200-*.mdc */
     ".cursor/rules/*.mdc"
   ],
   "output": {
-    "cursor": true,     /* outputs to .cursor/rules/cursor.mdc */
-    "windsurf": false,  /* generates file but format untested */
-    "copilot": false,   /* generates file but format untested */
-    "cline": false      /* generates file but format untested */
+    "cursor": true     /* outputs to .cursor/rules/ */
   }
 }
 ```
 
 Or use CLI options:
 ```bash
-# Specify sources and outputs
-airul gen --sources "README.md" "docs/*.yaml" --cursor --custom-output "custom.rules"
+# Generate rules from YAML files
+airul gen --sources "docs/ideas/*.yaml" --prefix "100" --cursor
+airul gen --sources "docs/draft/*.yaml" --prefix "200" --cursor
 
-# Enable multiple outputs
-airul gen --sources "README.md" --windsurf --copilot --cline
+# Generate rules from other docs
+airul gen --sources "README.md" "TODO-AI.md" --cursor
 ```
 
 This will:
 1. Scan your documentation files using verified glob patterns
-2. Support direct file paths and glob patterns like `docs/**/*.md`
+2. Convert each YAML file into its own rule file with appropriate prefix
 3. Generate AI context files in the specified locations
 4. Use standard markdown formatting for all outputs
 
@@ -137,7 +156,7 @@ This will:
 - ✅ Duplicates are automatically removed
 
 ### Output Options
-- ✅ `cursor`: Cursor IDE rules (.cursor/rules/cursor.mdc) - Fully tested
+- ✅ `cursor`: Cursor IDE rules (.cursor/rules/*.mdc) - Fully tested
 - ⚠️ `windsurf`: Windsurf IDE rules (.windsurfrules) - Generates file but format untested
 - ⚠️ `copilot`: GitHub Copilot instructions (.github/copilot-instructions.md) - Generates file but format untested
 - ⚠️ `cline`: Cline VSCode extension rules (.clinerules) - Generates file but format untested
@@ -151,7 +170,16 @@ Currently, only Cursor IDE support has been fully tested. For other editors:
 - 🔄 Please test with your editor and report any issues!
 
 ### Note About Cursor Support
-The tool outputs rules to `.cursor/rules/cursor.mdc` to support Cursor's new MDC rules format. This is the recommended format going forward, as the older `.cursorrules` format will be deprecated.
+The tool outputs rules to `.cursor/rules/` directory:
+- YAML files from docs/ideas/ become 100-*.mdc rules
+- YAML files from docs/draft/ become 200-*.mdc rules
+- Other documentation is combined into cursor.mdc
+
+This is the recommended format going forward, as the older `.cursorrules` format will be deprecated.
+
+For more information about Cursor's rules system, see:
+- [Cursor Rules Documentation](https://docs.cursor.com/context/rules-for-ai#project-rules-recommended)
+- [MDC Rules Best Practices](https://forum.cursor.com/t/my-best-practices-for-mdc-rules-and-troubleshooting/50526)
 
 ## License
 
