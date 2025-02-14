@@ -2,7 +2,105 @@
 
 > ⚠️ **REFACTORING IN PROGRESS**: This project is currently undergoing a major refactoring to improve code organization and maintainability. The features listed below were working in the previous version and will be restored after the refactor.
 
-Airul generates context for AI agents from your docs. It gives AI immediate access to up-to-date important info about your project.
+Airul generates context for AI agents from your docs. It gives AI immediate access to up-to-date important info about your project through a structured rule system.
+
+## Rule Generation Workflow
+
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         AIRUL RULE GENERATION FLOW                         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ┌─────────────┐                                                          │
+│  │  User Idea  │                                                          │
+│  │ Plain Text  │                                                          │
+│  └─────────────┘                                                          │
+│        │                                                                  │
+│        ▼                                                                  │
+│  ┌─────────────┐                                                          │
+│  │ Complexity  │                                                          │
+│  │   Check     │                                                          │
+│  └─────────────┘                                                          │
+│        │                                                                  │
+│        ├─────────────Simple──────────────┐                               │
+│        │                                 │                                │
+│        ▼                                 ▼                                │
+│  ┌─────────────┐                   ┌─────────────┐                       │
+│  │   Complex   │                   │   Simple    │                       │
+│  │    Path     │                   │    Path     │                       │
+│  └─────────────┘                   └─────────────┘                       │
+│        │                                 │                                │
+│        │                                 ▼                                │
+│        │                           ┌─────────────┐                       │
+│        │                           │ ideas-draft │                       │
+│        │                           │   *.yaml    │                       │
+│        │                           └─────────────┘                       │
+│        │                                 │                                │
+│        │                                 ▼                                │
+│        │                           ┌─────────────┐                       │
+│        │                           │  Enhanced   │                       │
+│        │                           │ Processing  │                       │
+│        │                           └─────────────┘                       │
+│        │                                 │                                │
+│        └─────────Mild Enhancement───────►│                               │
+│                                         ▼                                │
+│                                   ┌─────────────┐                       │
+│                                   │ rules-draft │                       │
+│                                   │   *.yaml    │                       │
+│                                   └─────────────┘                       │
+│                                         │                                │
+│                                         ▼                                │
+│                               ┌───────────────────┐                     │
+│                               │  .cursor/rules/   │                     │
+│                               └───────────────────┘                     │
+│                                         │                                │
+│                                         ▼                                │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                    RULE PRIORITY HIERARCHY                       │   │
+│  │                                                                  │   │
+│  │  ┌─────────────┐                                                │   │
+│  │  │  000-Core   │  Base Context & Cross-References               │   │
+│  │  └─────────────┘                                                │   │
+│  │         │                                                       │   │
+│  │         ▼                                                       │   │
+│  │  ┌─────────────┐                                                │   │
+│  │  │    100-*    │  Fundamental Architecture Rules               │   │
+│  │  └─────────────┘                                                │   │
+│  │         │                                                       │   │
+│  │         ▼                                                       │   │
+│  │  ┌─────────────┐                                                │   │
+│  │  │    200-*    │  Early Phase Implementation Rules             │   │
+│  │  └─────────────┘                                                │   │
+│  │         │                                                       │   │
+│  │         ▼                                                       │   │
+│  │  ┌─────────────┐                                                │   │
+│  │  │    300-*    │  Later Phase Implementation Rules             │   │
+│  │  └─────────────┘                                                │   │
+│  │                                                                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### Rule Priority System
+
+- **000-Core**: Base context and cross-references used by all other rules
+- **100-Series**: Fundamental architecture decisions and system design patterns
+- **200-Series**: Early phase implementation details and setup requirements
+- **300-Series**: Later phase implementations and advanced features
+
+### Processing Paths
+
+**Simple Ideas**:
+1. Expand to ideas-draft/*.yaml
+2. Enhanced processing with templates
+3. Generate multiple rule-draft/*.yaml
+4. Convert to prioritized .cursor/rules/*.mdc
+
+**Complex Ideas**:
+1. Split into logical sections
+2. Mild enhancement/structuring
+3. Direct to rule-draft/*.yaml
+4. Convert to prioritized .cursor/rules/*.mdc
 
 ## Previously Working Features (To Be Restored)
 
@@ -24,17 +122,10 @@ Core functionality that was working and will be restored after refactoring:
   - Smart merging of documentation
   - Duplicate removal
   
-- 🎨 **Editor Support**
-  - ✅ Cursor IDE (.cursor/rules/*.mdc) - Fully tested
-  - ⚠️ Experimental support for:
-    - Windsurf (.windsurfrules)
-    - GitHub Copilot (.github/copilot-instructions.md)
-    - Cline VSCode extension (.clinerules)
-
-- ⚙️ **Configuration**
-  - CLI options for quick setup
-  - JSON configuration file
-  - NPM scripts integration
+- 🎨 **Cursor IDE Integration**
+  - Full support for Cursor's rule system
+  - Hierarchical rule organization (000-Core, 100-Series, etc.)
+  - Cross-referencing between rules
   - Automatic context updates
 
 ## Development Status
@@ -88,7 +179,7 @@ airul new my-project "Create a React app with authentication" --cursor
 # 2. Initialize git repository
 # 3. Create initial documentation
 # 4. Generate AI context files
-# 5. Open in Cursor (and other editors if specified)
+# 5. Open in Cursor
 ```
 
 ### Best Practices for Ideas
@@ -170,13 +261,11 @@ Both approaches will update context when you:
 
 ## Features
 
-- 🎯 Generate AI context files:
-  - Fully tested with Cursor IDE (.cursor/rules/*.mdc)
-  - Each YAML file in docs/ideas/ and docs/draft/ becomes its own rule file
-  - File generation available for other editors:
-    - Windsurf (.windsurfrules) - generates file but format untested
-    - GitHub Copilot (.github/copilot-instructions.md) - generates file but format untested
-    - Cline VSCode extension (.clinerules) - generates file but format untested
+- 🎯 Generate AI context files for Cursor IDE:
+  - Hierarchical rule system (.cursor/rules/*.mdc)
+  - Priority-based organization (000-Core, 100-Series, etc.)
+  - Cross-referencing between rules
+  - Automatic context updates
 - 📝 Works with any text files (markdown, txt, etc.)
 - ⚙️ Simple configuration via CLI or config file
 - 🌟 Verified glob pattern support for source files
@@ -213,7 +302,7 @@ airul gen --sources "README.md" "TODO-AI.md" --cursor
 This will:
 1. Scan your documentation files using verified glob patterns
 2. Convert each YAML file into its own rule file with appropriate prefix
-3. Generate AI context files in the specified locations
+3. Generate AI context files in .cursor/rules/
 4. Use standard markdown formatting for all outputs
 
 ## Configuration
@@ -226,26 +315,10 @@ This will:
 - ✅ Duplicates are automatically removed
 
 ### Output Options
-- ✅ `cursor`: Cursor IDE rules (.cursor/rules/*.mdc) - Fully tested
-- ⚠️ `windsurf`: Windsurf IDE rules (.windsurfrules) - Generates file but format untested
-- ⚠️ `copilot`: GitHub Copilot instructions (.github/copilot-instructions.md) - Generates file but format untested
-- ⚠️ `cline`: Cline VSCode extension rules (.clinerules) - Generates file but format untested
-- ✅ `customPath`: Custom output file path works via CLI
-
-### Note About Editor Support
-Currently, only Cursor IDE support has been fully tested. For other editors:
-- ✅ Files are generated in standard locations
-- ⚠️ All files use the same markdown format as Cursor
-- ⚠️ Other editors may require different formatting
-- 🔄 Please test with your editor and report any issues!
-
-### Note About Cursor Support
-The tool outputs rules to `.cursor/rules/` directory:
-- YAML files from docs/ideas/ become 100-*.mdc rules
-- YAML files from docs/draft/ become 200-*.mdc rules
-- Other documentation is combined into cursor.mdc
-
-This is the recommended format going forward, as the older `.cursorrules` format will be deprecated.
+- ✅ Outputs to .cursor/rules/ directory
+- ✅ Supports hierarchical rule organization
+- ✅ Enables cross-referencing between rules
+- ✅ Maintains priority-based structure
 
 For more information about Cursor's rules system, see:
 - [Cursor Rules Documentation](https://docs.cursor.com/context/rules-for-ai#project-rules-recommended)
